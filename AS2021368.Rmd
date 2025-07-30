@@ -1,0 +1,391 @@
+---
+title: "Coronavirus country report - Germany"
+output: html_document
+author: "B.A.N.N.Wimalarathne - AS2021368"
+---
+<br/>
+
+```{r,echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, results=FALSE}
+library(devtools)
+devtools::install_github("thiyangt/sta3262")
+library(sta3262)
+get_individual_project_country("AS2021368")
+library(coronavirus)
+data("coronavirus")
+germany<- subset(coronavirus,country=="Germany")
+```
+
+#### **Introduction of Germany**
+
+>Germany, officially known as the Federal Republic of Germany, is a leading nation located in Central Europe. Bordered by nine countries, it stands as a vital economic and political hub within the continent. With a population exceeding 83 million people as of 2023, Germany is the most populous country in the European Union. Its central location, combined with its efficient transportation infrastructure, has made it a pivotal hub for trade and commerce. The country's commitment to education and research has fostered a knowledge-based economy, resulting in significant contributions to technological advancements.
+
+
+#### **Geographical Location**
+>Its capital city, Berlin, is renowned for its historical significance and cultural vibrancy, while other major cities like Munich, Hamburg, and Frankfurt contribute to the country’s dynamic economic landscape.
+As a federal republic composed of 16 states, Germany boasts a diverse geographical and demographic makeup.
+Germany shares its borders with nine countries, making it one of the most interconnected nations in Europe. 
+
+
+#### **These neighboring countries are:**
+<ul>
+
+<li>Denmark to the north</li>
+<li>Poland and the Czech Republic to the east</li>
+<li>Austria and Switzerland to the south</li>
+<li>France to the southwest</li>
+<li>Luxembourg, Belgium, and the Netherlands to the west</li>
+</ul>
+
+
+##### **Capital City**
+- Berlin
+
+##### **Currency**
+- Euro (€) (EUR)
+
+##### **Official Languages**
+- German
+
+##### **Demonym(s)**
+- German
+
+##### **Area**
+- 357,569 km2 
+
+##### **Population**
+- 84.6 million
+
+##### **Country Code**
+- +49 or 0049
+
+##### **Religions**
+- Christians (50.7%)
+- No religion (43.8%)
+- Eastern Orthodoxy (2.2%)
+- Islam (3.7%)
+- Other religions (1.7%)
+
+#### **Economic Overview**
+>Germany boasts the largest economy in Europe and the fourth largest in the world by nominal GDP. It is a global leader in various industries, including automotive manufacturing, engineering, chemicals, and pharmaceuticals. The country’s economic strength is underpinned by its robust industrial base, advanced infrastructure, and highly skilled workforce. Germany's commitment to innovation and research and development is evident in its strong emphasis on technological advancements and its thriving startup ecosystem.
+
+#### **Education and Healthcare**
+>The country is known for its high-quality education system and is home to some of the world’s leading universities and research institutions. Additionally, Germany offers a comprehensive healthcare system that ensures universal health coverage for its citizens, contributing to high life expectancy and well-being.
+
+<br/>
+          
+## **COVID-19 pandemic in Germany**
+>Germany, like many other countries, has been significantly impacted by the COVID-19 pandemic. Since the first confirmed case in January 2020, the country has navigated through multiple waves of infections, implementing various public health measures to mitigate the spread of the virus. This report provides a detailed examination of the COVID-19 situation in Germany, highlighting key statistics, government responses, and the socio-economic impact of the pandemic.
+
+
+#### **Initial Outbreak and Spread** 
+>The initial outbreak of COVID-19 in Germany was reported on January 27, 2020, when a case was confirmed in Bavaria. The virus quickly spread, leading to the implementation of nationwide measures to control the epidemic. Germany's early response was characterized by extensive testing, contact tracing, and the establishment of quarantine protocols.
+
+
+## **Exploratory Data Analysis**
+
+
+A data frame with following variables.
+
+**date :**
+Date in YYYY-MM-DD format.
+
+**province :**
+Name of province/state.
+
+**country :**
+Name of the country.
+
+**lat :**
+Latitude of center of geographic region.
+
+**long :**
+Longitude of center of geographic region.
+
+**type :**
+An indicator for the type of cases (confirmed, death, recovery).
+
+**cases :**
+Number of cases on given date.
+
+**uid :**
+Country code
+
+**iso2 :**
+Officially assigned country code identifiers with two-letter
+
+**iso3 :**
+Officially assigned country code identifiers with three-letter
+
+**code3 :**
+UN country code
+
+**combined_key :**
+Country and province (if applicable)
+
+**population :**
+Country or province population
+
+**continent_name :**
+Continent name
+
+**continent_code :**
+Continent code
+
+
+### **Distribution of Covid-19 in Germany** 
+
+This figure shows that, confirmed, death and recovered cases in Germany. At first, there were no cases but shortly, the number of confirmed cases increased speedily and it is much larger than death and confirmed cases.
+
+
+#### **Summary about the Filtered Germany Corona Dataset**
+
+
+```{r,echo=FALSE,message=FALSE, warning=FALSE}
+summary(germany)
+
+```
+
+
+
+This is the summary about filtered data set Germany from the coronavirus data set. 
+So can see in cases column there are minus values. Cases cannot be minus. They are outliers. So, we can do some statistical things to avoid this error. 
+The data set has data from 2020-01-22 to 2023-03-09. According to the above summary we can see the mean number of cases are 12271. The maximum number of cases are 484345.
+
+---------------------------------------------------------------------------------------------------------------------------
+
+#### **Confirmed Corona Cases in Germany**
+
+<center>
+
+```{r,echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, results=FALSE}
+
+## confirmed cases
+library(magrittr)
+library(dplyr)
+library(ggplot2)
+
+confirmed_cases <- germany %>% filter(type=="confirmed")
+summary(confirmed_cases)
+which(confirmed_cases$cases<0)
+
+#There are no minus vales
+
+qplot(date, cases, geom="line", data=confirmed_cases, colour=I("dark blue"))
+
+
+```
+</center>
+In the above Figure, we can see that there is high confirmed cases in first months of 2022. From 2023 the confirmed cases are decreased. 
+In here there are no missing values or null values.
+
+#### **Recovery Corona Cases in Germany**
+
+<center>
+```{r,echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, results=FALSE}
+
+## recovery cases
+
+recovery_cases <- germany %>% filter(type=="recovery")
+summary(recovery_cases)
+which(recovery_cases$cases<0)
+
+#There is a minus value in 555th row.So we take the mean vale of the above and below rows.
+
+recovery_cases$cases[555]=mean(c(recovery_cases$cases[554],recovery_cases$cases[556]))
+which(recovery_cases$cases<0)
+
+qplot(date, cases, geom="line", data=recovery_cases, colour=I("purple"))
+
+```
+</center>
+In the above figure from 2020 - 2021 the recovery cases are increased.In 2021 year firstly recovery cases are decreased and again it get increased.
+
+#### **Death Corona Cases in Germany**
+
+<center>
+```{r,echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, results=FALSE}
+
+##death cases
+
+death_cases <- germany %>% filter(type=="death")
+summary(death_cases)
+which(death_cases$cases<0)
+
+#There is a minus value in 555th row.So we take the mean vale of the above and below rows.
+
+death_cases$cases[56]=mean(c(death_cases$cases[55],death_cases$cases[57]))
+death_cases$cases[152]=mean(c(death_cases$cases[151],death_cases$cases[153]))
+death_cases$cases[194]=mean(c(death_cases$cases[193],death_cases$cases[195]))
+which(recovery_cases$cases<0)
+
+
+qplot(date, cases, geom="line", data=death_cases, colour=I("pink"))
+
+```
+</center>
+In the above plots, we can see that there is a maximum confirmed cases in 2021. Between 2021 and 2023 , we can see increasing and decreasing patterns.
+
+
+#### **Active Cases In Germany**
+<br>
+
+<center>
+
+```{r,echo=FALSE,message=FALSE, warning=FALSE, paged.print=FALSE, results=FALSE}
+##active cases
+library(tidyverse) 
+library(magrittr)
+library(plotly)
+active_cases <-  germany %>%
+   group_by(type, date) %>%
+   summarise(total_cases= sum(cases)) %>%
+   pivot_wider(names_from = type, values_from = total_cases) %>%
+   arrange(date) %>%
+   mutate(active = confirmed -( death + recovery)) %>%
+   mutate(total_active_cases = cumsum(active),
+          total_recovered_cases = cumsum(recovery),
+          total_death_cases = cumsum(death))
+
+which(active_cases$cases<0)
+
+ggplot(active_cases, aes(x =date,y =total_active_cases)) + geom_line(color="brown")+labs(title = "Acive cases in Germany")
+
+  
+
+
+
+```
+</center>
+According to the graph we can conclude that most of active cases are between mid 2022 to early 2023.
+
+#### **Compare Confirmed Cases with France,Belgium and Poland**
+<br>
+
+<center>
+```{r,echo=FALSE,message=FALSE, warning=FALSE, paged.print=FALSE, results=FALSE}
+##comparison
+
+neighbour_country <- coronavirus %>% filter (country==c ("France", "Belgium", "Poland","Germany"))
+
+## neighbouring country confirmed 
+
+confirmed_country <- neighbour_country %>% filter (type=="confirmed")
+which(confirmed_country$cases<0)
+
+confirmed_country$cases[1267]=mean(c(confirmed_country$cases[1266],confirmed_country$cases[1268]))
+confirmed_country$cases[1751]=mean(c(confirmed_country$cases[1750],confirmed_country$cases[1752]))
+confirmed_country$cases[2012]=mean(c(confirmed_country$cases[2011],confirmed_country$cases[2013]))
+confirmed_country$cases[3460]=mean(c(confirmed_country$cases[3459],confirmed_country$cases[3461]))
+confirmed_country$cases[3501]=mean(c(confirmed_country$cases[3500],confirmed_country$cases[3502]))
+confirmed_country$cases[3524]=mean(c(confirmed_country$cases[3523],confirmed_country$cases[3525]))
+confirmed_country$cases[3647]=mean(c(confirmed_country$cases[3646],confirmed_country$cases[3648]))
+
+ggplot(confirmed_country, aes(x=date, y= cases, colour=country)) + geom_path(size=1) +
+  labs(title = "Comparison - Confirmed Corona cases with France,Belgium and Poland")
+
+```
+</center>
+
+According to the Figure, we can say that France has the highest confirmed corona cases. As well as Belgium has the lowest confirmed corona cases.Both Germany and France has the same pattern of confirmed cases.
+
+#### **Compare Recovery Cases with France,Belgium and Poland**
+
+<center>
+```{r,echo=FALSE,message=FALSE, warning=FALSE, paged.print=FALSE, results=FALSE}
+##comparison
+
+neighbour_country <- coronavirus %>% filter (country==c ("France", "Belgium", "Poland","Germany"))
+
+## neighbouring country recovery 
+
+recovery_country <- neighbour_country %>% filter (type=="recovery")
+which(recovery_country$cases<0)
+
+recovery_country$cases[3158]=mean(c(recovery_country$cases[3157],recovery_country$cases[3159]))
+recovery_country$cases[3472]=mean(c(recovery_country$cases[3471],recovery_country$cases[3476]))
+recovery_country$cases[3473]=mean(c(recovery_country$cases[3472],recovery_country$cases[3477]))
+recovery_country$cases[3474]=mean(c(recovery_country$cases[3473],recovery_country$cases[3479]))
+recovery_country$cases[3475]=mean(c(recovery_country$cases[3474],recovery_country$cases[3483]))
+recovery_country$cases[3478]=mean(c(recovery_country$cases[3477],recovery_country$cases[3484]))
+recovery_country$cases[3480]=mean(c(recovery_country$cases[3479],recovery_country$cases[3485]))
+recovery_country$cases[3481]=mean(c(recovery_country$cases[3480],recovery_country$cases[3486]))
+recovery_country$cases[3482]=mean(c(recovery_country$cases[3481],recovery_country$cases[3487]))
+recovery_country$cases[3491]=mean(c(recovery_country$cases[3490],recovery_country$cases[3492]))
+recovery_country$cases[3495]=mean(c(recovery_country$cases[3494],recovery_country$cases[3496]))
+recovery_country$cases[3557]=mean(c(recovery_country$cases[3556],recovery_country$cases[3558]))
+recovery_country$cases[3564]=mean(c(recovery_country$cases[3563],recovery_country$cases[3565]))
+
+ggplot(recovery_country, aes(x=date, y= cases, colour=country)) + geom_path(size=1) +
+  labs(title = "Comparison - Recovery Corona cases with France,Belgium and Poland")
+
+```
+</center>
+In the above the figure, we can say that Poland has the highest recovery corona cases. As well as Belgium has the lowest confirmed corona cases.
+
+#### **Compare Death Cases with France,Belgium and Poland**
+
+<center>
+```{r,echo=FALSE,message=FALSE, warning=FALSE, paged.print=FALSE, results=FALSE}
+##comparison
+
+neighbour_country <- coronavirus %>% filter (country==c ("France", "Belgium", "Poland","Germany"))
+
+## neighbouring country death
+
+death_country <- neighbour_country %>% filter (type=="death")
+which(death_country$cases<0) 
+
+death_country$cases[748]=mean(c(death_country$cases[747],death_country$cases[749]))
+death_country$cases[1413]=mean(c(death_country$cases[1412],death_country$cases[1414]))
+death_country$cases[3196]=mean(c(death_country$cases[3195],death_country$cases[3197]))
+death_country$cases[3574]=mean(c(death_country$cases[3573],death_country$cases[3575]))
+death_country$cases[3727]=mean(c(death_country$cases[3726],death_country$cases[3728]))
+death_country$cases[3751]=mean(c(death_country$cases[3750],death_country$cases[3752]))
+
+ggplot(death_country, aes(x=date, y= cases, colour=country)) + geom_path(size=1) +
+  labs(title = "Comparison - Death Corona cases with France,Belgium and Poland")
+
+```
+</center>
+According to the Figure, we can say that France has the highest death corona cases. As well as Belgium has the lowest death corona cases.Poland also has considerable death cases.
+
+
+#### **All Confirmed, Recovery and Death cases**
+
+<center>
+
+```{r ,echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, results=FALSE}
+##all cases 
+germany_corona_new <- germany %>% mutate(cases= replace(cases,which(cases < 0), NA))
+summary
+
+
+ggplot(germany_corona_new, aes(date, cases, col=cases)) + geom_path(size=1) + facet_grid(rows = vars(type)) +
+  labs(title = "Confirmed, Death and Recovered cases in Germany")
+
+```
+</center>
+
+<center>
+
+```{r,echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+ggplot(data = germany_corona_new, mapping = aes(x=date, y=cases, fill=type)) +
+  geom_bar(stat="identity", position = "dodge", width = 4) + scale_fill_brewer(palette =  "Dark2")
+
+```
+</center>
+
+According to the this figure we can see the death are very lover than confirmed and recovery cases. That is good thing. Between 2022-2023 have the maximum confirmed cases.
+
+#### **Conclusions and Discussion**
+
+>In my data set, there were some minus values for recovery and death cases. So, I did some statistical method to minimize that. At first there were a small number of confirmed cases, and during 2022 the confirmed cases were very large. but Germany has a smaller number of death cases than confirmed cases. During 2021, the recovery cases are high, but after that, they have decreased. Death cases are high in 2021, and also in 2022 and 2023, death cases are considerably high. I compared all cases with the neighboring countries, which are Poland, Belgium, and France. Germany has a larger number of all cases than Poland and Belgium. But lower than France. There were minus values in the data set of Poland, France, and Belgium.
+
+
+<br>
+
+#### **References**
+
+- [Introduction about Germany](https://en.wikipedia.org/wiki/Germany)
+
